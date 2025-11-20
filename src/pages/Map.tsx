@@ -1,12 +1,5 @@
-import { useEffect, useRef, useState } from "react";
-import mapboxgl from "mapbox-gl";
-import "mapbox-gl/dist/mapbox-gl.css";
-import { MapPin, Truck, Info } from "lucide-react";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { Button } from "@/components/ui/button";
-import { Alert, AlertDescription } from "@/components/ui/alert";
+import { MapPin, Truck } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 const collectPoints = [
   { name: "Centro de Coleta - Centro", coords: [-51.4619, -23.5505], type: "point" },
@@ -16,89 +9,6 @@ const collectPoints = [
 ];
 
 const Map = () => {
-  const mapContainer = useRef<HTMLDivElement>(null);
-  const map = useRef<mapboxgl.Map | null>(null);
-  const [mapboxToken, setMapboxToken] = useState("");
-  const [isMapLoaded, setIsMapLoaded] = useState(false);
-
-  useEffect(() => {
-    if (!mapContainer.current || !mapboxToken) return;
-
-    mapboxgl.accessToken = mapboxToken;
-
-    map.current = new mapboxgl.Map({
-      container: mapContainer.current,
-      style: "mapbox://styles/mapbox/streets-v12",
-      center: [-51.4619, -23.5505], // Apucarana, PR
-      zoom: 13,
-    });
-
-    map.current.addControl(new mapboxgl.NavigationControl(), "top-right");
-
-    map.current.on("load", () => {
-      setIsMapLoaded(true);
-
-      // Adicionar marcadores dos pontos de coleta
-      collectPoints.forEach((point) => {
-        const el = document.createElement("div");
-        el.className = "marker";
-        el.style.width = "40px";
-        el.style.height = "40px";
-        el.style.backgroundImage = "url(https://docs.mapbox.com/mapbox-gl-js/assets/custom_marker.png)";
-        el.style.backgroundSize = "100%";
-
-        new mapboxgl.Marker(el)
-          .setLngLat(point.coords as [number, number])
-          .setPopup(
-            new mapboxgl.Popup({ offset: 25 }).setHTML(
-              `<h3 style="font-weight: bold; margin-bottom: 4px;">${point.name}</h3>
-               <p style="color: #666;">Ponto de coleta de resíduos têxteis</p>`
-            )
-          )
-          .addTo(map.current!);
-      });
-
-      // Adicionar rota de exemplo (simulação de rota de caminhão)
-      if (map.current?.getSource("route")) return;
-      
-      map.current?.addSource("route", {
-        type: "geojson",
-        data: {
-          type: "Feature",
-          properties: {},
-          geometry: {
-            type: "LineString",
-            coordinates: [
-              [-51.4619, -23.5505],
-              [-51.4580, -23.5620],
-              [-51.4700, -23.5450],
-              [-51.4550, -23.5380],
-              [-51.4619, -23.5505],
-            ],
-          },
-        },
-      });
-
-      map.current?.addLayer({
-        id: "route",
-        type: "line",
-        source: "route",
-        layout: {
-          "line-join": "round",
-          "line-cap": "round",
-        },
-        paint: {
-          "line-color": "hsl(45, 100%, 51%)",
-          "line-width": 4,
-          "line-dasharray": [2, 2],
-        },
-      });
-    });
-
-    return () => {
-      map.current?.remove();
-    };
-  }, [mapboxToken]);
 
   return (
     <div className="min-h-screen bg-background">
@@ -119,63 +29,22 @@ const Map = () => {
 
       {/* Map Section */}
       <section className="container mx-auto max-w-6xl px-4 py-12">
-        {!mapboxToken ? (
-          <Card className="shadow-card">
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <Info className="h-5 w-5 text-primary" />
-                Configuração do Mapa
-              </CardTitle>
-              <CardDescription>
-                Para visualizar o mapa, você precisa adicionar sua chave de API do Mapbox.
-              </CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <Alert>
-                <Info className="h-4 w-4" />
-                <AlertDescription>
-                  Obtenha sua chave gratuita em{" "}
-                  <a
-                    href="https://mapbox.com"
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="font-medium text-primary hover:underline"
-                  >
-                    mapbox.com
-                  </a>
-                </AlertDescription>
-              </Alert>
-              
-              <div className="space-y-2">
-                <Label htmlFor="token">Token de Acesso do Mapbox</Label>
-                <Input
-                  id="token"
-                  type="password"
-                  placeholder="pk.eyJ1..."
-                  onChange={(e) => setMapboxToken(e.target.value)}
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          {/* Map Container */}
+          <div className="lg:col-span-2">
+            <Card className="overflow-hidden shadow-card">
+              <div className="w-full h-[600px] bg-muted flex items-center justify-center relative">
+                <img 
+                  src="https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/-51.4619,-23.5505,13,0/1200x600@2x?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"
+                  alt="Mapa de Apucarana mostrando pontos de coleta"
+                  className="w-full h-full object-cover"
                 />
+                <div className="absolute inset-0 flex items-center justify-center bg-background/5">
+                  <p className="text-foreground/60 text-sm">Mapa de Apucarana - PR</p>
+                </div>
               </div>
-              
-              <Button
-                onClick={() => {
-                  if (mapboxToken) {
-                    setIsMapLoaded(false);
-                  }
-                }}
-                className="w-full bg-gradient-primary"
-              >
-                Carregar Mapa
-              </Button>
-            </CardContent>
-          </Card>
-        ) : (
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-            {/* Map Container */}
-            <div className="lg:col-span-2">
-              <Card className="overflow-hidden shadow-card">
-                <div ref={mapContainer} className="w-full h-[600px]" />
-              </Card>
-            </div>
+            </Card>
+          </div>
 
             {/* Legend and Info */}
             <div className="space-y-6">
@@ -209,9 +78,8 @@ const Map = () => {
                   </p>
                 </CardContent>
               </Card>
-            </div>
           </div>
-        )}
+        </div>
       </section>
     </div>
   );
