@@ -1,5 +1,6 @@
 import { MapPin, Truck } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import mapPreview from "@/assets/map-preview.jpg";
 
 const collectPoints = [
   { name: "Centro de Coleta - Centro", coords: [-51.4619, -23.5505], type: "point" },
@@ -35,13 +36,10 @@ const Map = () => {
             <Card className="overflow-hidden shadow-card">
               <div className="w-full h-[600px] bg-muted flex items-center justify-center relative">
                 <img 
-                  src="https://api.mapbox.com/styles/v1/mapbox/streets-v12/static/-51.4619,-23.5505,13,0/1200x600@2x?access_token=pk.eyJ1IjoibWFwYm94IiwiYSI6ImNpejY4NXVycTA2emYycXBndHRqcmZ3N3gifQ.rJcFIG214AriISLbB6B5aw"
-                  alt="Mapa de Apucarana mostrando pontos de coleta"
+                  src={mapPreview}
+                  alt="Mapa de Apucarana mostrando pontos de coleta e rotas dos caminhões"
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute inset-0 flex items-center justify-center bg-background/5">
-                  <p className="text-foreground/60 text-sm">Mapa de Apucarana - PR</p>
-                </div>
               </div>
             </Card>
           </div>
