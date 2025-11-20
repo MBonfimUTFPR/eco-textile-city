@@ -29,9 +29,11 @@ export const Header = () => {
         <div className="flex h-16 items-center justify-between">
           {/* Logo e nome */}
           <div className="flex items-center gap-3">
-            <div className="flex h-10 w-10 items-center justify-center rounded-lg bg-gradient-primary">
-              <span className="text-xl font-bold text-primary-foreground">RT</span>
-            </div>
+            <img 
+              src="/placeholder.svg" 
+              alt="Logo da Prefeitura - Reciclagem Têxtil"
+              className="h-12 w-12 object-contain"
+            />
             <div className="hidden sm:block">
               <h1 className="text-lg font-bold text-foreground">Reciclagem Têxtil</h1>
               <p className="text-xs text-muted-foreground">Prefeitura Municipal</p>
@@ -97,9 +99,11 @@ export const Header = () => {
               <SheetContent side="left" className="w-72">
                 <div className="flex flex-col gap-4 mt-8">
                   <div className="flex items-center gap-3 pb-4 border-b">
-                    <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-primary">
-                      <span className="text-2xl font-bold text-primary-foreground">RT</span>
-                    </div>
+                    <img 
+                      src="/placeholder.svg" 
+                      alt="Logo da Prefeitura - Reciclagem Têxtil"
+                      className="h-12 w-12 object-contain"
+                    />
                     <div>
                       <h2 className="font-bold text-foreground">Reciclagem Têxtil</h2>
                       <p className="text-xs text-muted-foreground">Prefeitura Municipal</p>
